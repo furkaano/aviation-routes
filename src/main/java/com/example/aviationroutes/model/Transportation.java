@@ -1,10 +1,12 @@
 package com.example.aviationroutes.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import org.springframework.lang.NonNull;
 
 @Entity
 @Table(name = "transportations")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Transportation {
 
     public enum TransportationType {
@@ -19,30 +21,23 @@ public class Transportation {
     private Long id;
 
     @NonNull
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "origin_location_id")
-    private Location originLocationId;
+    private Location originLocation;
 
     @NonNull
-    private String originLocationName;
-
-    @NonNull
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "destination_location_id")
-    private Location destinationLocationId;
-
-    @NonNull
-    private String destinationLocationName;
+    private Location destinationLocation;
 
     @Enumerated(EnumType.STRING)
     private TransportationType transportationType;
 
-    public Transportation(Long id, @NonNull Location originLocationId, @NonNull String originLocationName, @NonNull Location destinationLocationId, @NonNull String destinationLocationName, TransportationType transportationType) {
+
+    public Transportation(Long id, @NonNull Location originLocation, @NonNull Location destinationLocation, TransportationType transportationType) {
         this.id = id;
-        this.originLocationId = originLocationId;
-        this.originLocationName = originLocationName;
-        this.destinationLocationId = destinationLocationId;
-        this.destinationLocationName = destinationLocationName;
+        this.originLocation = originLocation;
+        this.destinationLocation = destinationLocation;
         this.transportationType = transportationType;
     }
 
@@ -59,39 +54,21 @@ public class Transportation {
     }
 
     @NonNull
-    public Location getOriginLocationId() {
-        return originLocationId;
+    public Location getOriginLocation() {
+        return originLocation;
     }
 
-    public void setOriginLocationId(@NonNull Location originLocationId) {
-        this.originLocationId = originLocationId;
-    }
-
-    @NonNull
-    public String getOriginLocationName() {
-        return originLocationName;
-    }
-
-    public void setOriginLocationName(@NonNull String originLocationName) {
-        this.originLocationName = originLocationName;
+    public void setOriginLocation(@NonNull Location originLocation) {
+        this.originLocation = originLocation;
     }
 
     @NonNull
-    public Location getDestinationLocationId() {
-        return destinationLocationId;
+    public Location getDestinationLocation() {
+        return destinationLocation;
     }
 
-    public void setDestinationLocationId(@NonNull Location destinationLocationId) {
-        this.destinationLocationId = destinationLocationId;
-    }
-
-    @NonNull
-    public String getDestinationLocationName() {
-        return destinationLocationName;
-    }
-
-    public void setDestinationLocationName(@NonNull String destinationLocationName) {
-        this.destinationLocationName = destinationLocationName;
+    public void setDestinationLocation(@NonNull Location destinationLocation) {
+        this.destinationLocation = destinationLocation;
     }
 
     public TransportationType getTransportationType() {
