@@ -2,6 +2,7 @@ package com.example.aviationroutes.service;
 
 import com.example.aviationroutes.dto.RouteDto;
 import com.example.aviationroutes.dto.SegmentDto;
+import com.example.aviationroutes.exception.InvalidRouteException;
 import com.example.aviationroutes.model.Location;
 import com.example.aviationroutes.model.Transportation;
 import com.example.aviationroutes.repository.LocationRepository;
@@ -39,12 +40,13 @@ public class RouteService {
         List<RouteDto> results = new ArrayList<>();
 
         results.addAll(findDirectFlights(flights, originId, destinationId));
-
         results.addAll(findBeforeFlight(flights, nonFlights, originId, destinationId));
-
         results.addAll(findAfterFlight(flights, nonFlights, originId, destinationId));
-
         results.addAll(findBeforeAndAfterFlight(flights, nonFlights, originId, destinationId));
+
+        if (results.isEmpty()) {
+            throw new InvalidRouteException("Invalid route: no flight segment found or no valid route.");
+        }
 
         return results;
     }

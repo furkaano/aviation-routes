@@ -1,6 +1,8 @@
 package com.example.aviationroutes.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import org.springframework.lang.NonNull;
 
 @Entity
@@ -11,15 +13,19 @@ public class Location {
     private Long id;
 
     @NonNull
+    @NotBlank(message = "Name is required")
     private String name;
 
     @NonNull
+    @NotBlank(message = "Country is required")
     private String country;
 
     @NonNull
+    @NotBlank(message = "City is required")
     private String city;
 
     @NonNull
+    @Size(max = 3, message = "Location code must be at most 3 characters")
     private String locationCode;
 
     public Location(Long id, @NonNull String name, @NonNull String country, @NonNull String city, @NonNull String locationCode) {

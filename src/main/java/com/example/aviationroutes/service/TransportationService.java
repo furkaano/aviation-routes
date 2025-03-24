@@ -19,10 +19,18 @@ public class TransportationService {
     }
 
     public Transportation createTransportation(Transportation transportation){
+        if (transportation.getOriginLocation().getId().equals(transportation.getDestinationLocation().getId())) {
+            throw new RuntimeException("Origin and destination cannot be the same.");
+        }
+
         return transportationRepository.save(transportation);
     }
 
     public Transportation updateTransportation(Long id, Transportation transportation){
+        if (transportation.getOriginLocation().getId().equals(transportation.getDestinationLocation().getId())) {
+            throw new RuntimeException("Origin and destination cannot be the same.");
+        }
+
         Optional<Transportation> existingTrans= transportationRepository.findById(id);
         if(existingTrans.isPresent()){
             Transportation exist = existingTrans.get();

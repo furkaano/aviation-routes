@@ -2,6 +2,7 @@ package com.example.aviationroutes.controller;
 
 import com.example.aviationroutes.model.Location;
 import com.example.aviationroutes.service.LocationService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,13 +21,13 @@ public class LocationController {
     }
 
     @PostMapping
-    public ResponseEntity<Location> createLocation(@RequestBody Location location) {
+    public ResponseEntity<Location> createLocation(@Valid @RequestBody Location location) {
         Location saved = locationService.createLocation(location);
         return new ResponseEntity<>(saved, HttpStatus.CREATED);
     }
 
     @PostMapping("/bulkInsert")
-    public ResponseEntity<List<Location>> createLocationsBulk(@RequestBody List<Location> locations) {
+    public ResponseEntity<List<Location>> createLocationsBulk(@Valid @RequestBody List<Location> locations) {
         List<Location> savedLocations = locationService.saveAllLocations(locations);
         return new ResponseEntity<>(savedLocations, HttpStatus.CREATED);
     }

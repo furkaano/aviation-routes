@@ -2,6 +2,7 @@ package com.example.aviationroutes.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.lang.NonNull;
 
 @Entity
@@ -20,16 +21,17 @@ public class Transportation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NonNull
+    @NotNull(message = "Origin location is required")
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "origin_location_id")
     private Location originLocation;
 
-    @NonNull
+    @NotNull(message = "Destination location is required")
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "destination_location_id")
     private Location destinationLocation;
 
+    @NotNull(message = "Transportation type is required")
     @Enumerated(EnumType.STRING)
     private TransportationType transportationType;
 
