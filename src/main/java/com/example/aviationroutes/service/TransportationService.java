@@ -52,4 +52,8 @@ public class TransportationService {
     public List<Transportation> getAllTransportations() {
         return transportationRepository.findAll();
     }
+
+    public List<Transportation> saveAllTransportations(List<Transportation> transportations) {
+        return transportationRepository.saveAll(transportations);
+    }
 }

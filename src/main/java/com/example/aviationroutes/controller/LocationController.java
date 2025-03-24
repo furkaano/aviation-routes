@@ -25,6 +25,12 @@ public class LocationController {
         return new ResponseEntity<>(saved, HttpStatus.CREATED);
     }
 
+    @PostMapping("/bulkInsert")
+    public ResponseEntity<List<Location>> createLocationsBulk(@RequestBody List<Location> locations) {
+        List<Location> savedLocations = locationService.saveAllLocations(locations);
+        return new ResponseEntity<>(savedLocations, HttpStatus.CREATED);
+    }
+
     @GetMapping
     public ResponseEntity<List<Location>> getAllLocations() {
         List<Location> locations = locationService.getAllLocations();

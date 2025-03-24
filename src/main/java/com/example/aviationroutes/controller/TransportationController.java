@@ -25,6 +25,12 @@ public class TransportationController {
         return new ResponseEntity<>(saved, HttpStatus.CREATED);
     }
 
+    @PostMapping("/bulkInsert")
+    public ResponseEntity<List<Transportation>> createLocationsBulk(@RequestBody List<Transportation> transportations) {
+        List<Transportation> savedTransportations = transportationService.saveAllTransportations(transportations);
+        return new ResponseEntity<>(savedTransportations, HttpStatus.CREATED);
+    }
+
     @GetMapping
     public ResponseEntity<List<Transportation>> getAllTransportations() {
         List<Transportation> list = transportationService.getAllTransportations();
