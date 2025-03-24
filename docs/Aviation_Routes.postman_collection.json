@@ -124,6 +124,35 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "BulkCreateLocation",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    {\r\n        \"id\": 1,\r\n        \"name\": \"Taksim Square\",\r\n        \"country\": \"Turkey\",\r\n        \"city\": \"Istanbul\",\r\n        \"locationCode\": \"\"\r\n    },\r\n    {\r\n        \"id\": 2,\r\n        \"name\": \"Istanbul Airport\",\r\n        \"country\": \"Turkey\",\r\n        \"city\": \"Istanbul\",\r\n        \"locationCode\": \"IST\"\r\n    },\r\n    {\r\n        \"id\": 3,\r\n        \"name\": \"Sabiha Gokcen Airport\",\r\n        \"country\": \"Turkey\",\r\n        \"city\": \"Istanbul\",\r\n        \"locationCode\": \"SAW\"\r\n    },\r\n    {\r\n        \"id\": 4,\r\n        \"name\": \"Esenler Bus Station\",\r\n        \"country\": \"Turkey\",\r\n        \"city\": \"Istanbul\",\r\n        \"locationCode\": \"\"\r\n    },\r\n    {\r\n        \"id\": 5,\r\n        \"name\": \"London Heathrow Airport\",\r\n        \"country\": \"UK\",\r\n        \"city\": \"London\",\r\n        \"locationCode\": \"LHR\"\r\n    },\r\n    {\r\n        \"id\": 6,\r\n        \"name\": \"London Stansted Airport\",\r\n        \"country\": \"UK\",\r\n        \"city\": \"London\",\r\n        \"locationCode\": \"STN\"\r\n    },\r\n    {\r\n        \"id\": 7,\r\n        \"name\": \"Wembley Stadium\",\r\n        \"country\": \"UK\",\r\n        \"city\": \"London\",\r\n        \"locationCode\": \"\"\r\n    },\r\n    {\r\n        \"id\": 8,\r\n        \"name\": \"Times Square\",\r\n        \"country\": \"USA\",\r\n        \"city\": \"New York\",\r\n        \"locationCode\": \"\"\r\n    },\r\n    {\r\n        \"id\": 9,\r\n        \"name\": \"John F. Kennedy International Airport\",\r\n        \"country\": \"USA\",\r\n        \"city\": \"New York\",\r\n        \"locationCode\": \"JFK\"\r\n    },\r\n    {\r\n        \"id\": 10,\r\n        \"name\": \"Grand Central Station\",\r\n        \"country\": \"USA\",\r\n        \"city\": \"New York\",\r\n        \"locationCode\": \"\"\r\n    }\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/locations/bulkInsert",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"locations",
+								"bulkInsert"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -241,6 +270,220 @@
 							"path": [
 								"transportations",
 								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "BulkCreateTransportation",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n  {\r\n    \"originLocation\": { \"id\": 1 },\r\n    \"destinationLocation\": { \"id\": 2 },\r\n    \"transportationType\": \"BUS\"\r\n  },\r\n  {\r\n    \"originLocation\": { \"id\": 1 },\r\n    \"destinationLocation\": { \"id\": 2 },\r\n    \"transportationType\": \"UBER\"\r\n  },\r\n  {\r\n    \"originLocation\": { \"id\": 3 },\r\n    \"destinationLocation\": { \"id\": 4 },\r\n    \"transportationType\": \"BUS\"\r\n  },\r\n  {\r\n    \"originLocation\": { \"id\": 2 },\r\n    \"destinationLocation\": { \"id\": 5 },\r\n    \"transportationType\": \"FLIGHT\"\r\n  },\r\n  {\r\n    \"originLocation\": { \"id\": 5 },\r\n    \"destinationLocation\": { \"id\": 7 },\r\n    \"transportationType\": \"UBER\"\r\n  },\r\n  {\r\n    \"originLocation\": { \"id\": 6 },\r\n    \"destinationLocation\": { \"id\": 7 },\r\n    \"transportationType\": \"SUBWAY\"\r\n  },\r\n    {\r\n    \"originLocation\": { \"id\": 6 },\r\n    \"destinationLocation\": { \"id\": 7 },\r\n    \"transportationType\": \"UBER\"\r\n  },\r\n  {\r\n    \"originLocation\": { \"id\": 8 },\r\n    \"destinationLocation\": { \"id\": 9 },\r\n    \"transportationType\": \"UBER\"\r\n  },\r\n  {\r\n    \"originLocation\": { \"id\": 9 },\r\n    \"destinationLocation\": { \"id\": 10 },\r\n    \"transportationType\": \"SUBWAY\"\r\n  },\r\n  {\r\n    \"originLocation\": { \"id\": 5 },\r\n    \"destinationLocation\": { \"id\": 9 },\r\n    \"transportationType\": \"FLIGHT\"\r\n  },\r\n  {\r\n    \"originLocation\": { \"id\": 1 },\r\n    \"destinationLocation\": { \"id\": 3 },\r\n    \"transportationType\": \"UBER\"\r\n  }\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/transportations/bulkInsert",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"transportations",
+								"bulkInsert"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Routes",
+			"item": [
+				{
+					"name": "DirectFlight",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/routes?origin=2&destination=5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"routes"
+							],
+							"query": [
+								{
+									"key": "origin",
+									"value": "2"
+								},
+								{
+									"key": "destination",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "BeforeFlightTransfer",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/routes?origin=1&destination=5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"routes"
+							],
+							"query": [
+								{
+									"key": "origin",
+									"value": "1"
+								},
+								{
+									"key": "destination",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AfterFlightTransfer",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/routes?origin=2&destination=7",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"routes"
+							],
+							"query": [
+								{
+									"key": "origin",
+									"value": "2"
+								},
+								{
+									"key": "destination",
+									"value": "7"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "BeforeandAfterFlightTransfer",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/routes?origin=1&destination=7",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"routes"
+							],
+							"query": [
+								{
+									"key": "origin",
+									"value": "1"
+								},
+								{
+									"key": "destination",
+									"value": "7"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "NoFlight",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/routes?origin=1&destination=3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"routes"
+							],
+							"query": [
+								{
+									"key": "origin",
+									"value": "1"
+								},
+								{
+									"key": "destination",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "MultipleFlights",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/routes?origin=2&destination=9",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"routes"
+							],
+							"query": [
+								{
+									"key": "origin",
+									"value": "2"
+								},
+								{
+									"key": "destination",
+									"value": "9"
+								}
 							]
 						}
 					},
