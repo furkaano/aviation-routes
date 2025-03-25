@@ -16,7 +16,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"Sabiha Gokcen Airport\",\r\n    \"country\": \"Turkey\",\r\n    \"city\": \"Istanbul\",\r\n    \"locationCode\": \"SAW\"\r\n}",
+							"raw": "{\r\n  \"name\": \"Grand Central Station\",\r\n  \"country\": \"USA\",\r\n  \"city\": \"New York\",\r\n  \"locationCode\": \"\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -454,35 +454,6 @@
 								{
 									"key": "destination",
 									"value": "3"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "MultipleFlights",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8080/routes?origin=2&destination=9",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"routes"
-							],
-							"query": [
-								{
-									"key": "origin",
-									"value": "2"
-								},
-								{
-									"key": "destination",
-									"value": "9"
 								}
 							]
 						}
