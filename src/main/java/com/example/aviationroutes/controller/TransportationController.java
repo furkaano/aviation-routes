@@ -12,6 +12,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/transportations")
+@CrossOrigin(origins = "http://localhost:3000")
 public class TransportationController {
 
     private final TransportationService transportationService;
