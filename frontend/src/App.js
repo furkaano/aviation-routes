@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
 import LocationsPage from "./pages/LocationsPage";
 import TransportationsPage from "./pages/TransportationsPage";
+import RoutesPage from "./pages/RoutesPage";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
             <Routes>
                 <Route path="/locations" element={<LocationsPage />} />
                 <Route path="/transportations" element={<TransportationsPage />} />
+                <Route path="/routes" element={<RoutesPage />} />
                 <Route path="/" element={<h2>Hoş geldiniz!</h2>} />
                 <Route path="*" element={<h2>404 - Sayfa Bulunamadı</h2>} />
             </Routes>

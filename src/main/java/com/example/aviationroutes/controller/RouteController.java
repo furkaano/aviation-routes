@@ -4,15 +4,13 @@ import com.example.aviationroutes.dto.RouteDto;
 import com.example.aviationroutes.service.RouteService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/routes")
+@CrossOrigin(origins = "http://localhost:3000")
 public class RouteController {
 
     private final RouteService routeService;
