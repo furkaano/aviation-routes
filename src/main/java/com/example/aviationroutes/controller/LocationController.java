@@ -13,6 +13,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/locations")
+@CrossOrigin(origins = "http://localhost:3000")
 public class LocationController {
     
     private final LocationService locationService;
