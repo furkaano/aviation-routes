@@ -24,6 +24,9 @@ public class RouteService {
     }
 
     public List<RouteDto> findAllValidRoutes(Long originId, Long destinationId){
+        if (originId.equals(destinationId)) {
+            throw new InvalidRouteException("Origin and destination cannot be the same.");
+        }
         List<Transportation> transportations = transportationRepository.findAll();
 
         List<Transportation> flights = new ArrayList<>();

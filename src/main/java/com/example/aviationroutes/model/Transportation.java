@@ -2,6 +2,7 @@ package com.example.aviationroutes.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.lang.NonNull;
 
@@ -21,22 +22,22 @@ public class Transportation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull(message = "Origin location is required")
+    @NotBlank(message = "Origin location is required")
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "origin_location_id")
     private Location originLocation;
 
-    @NotNull(message = "Destination location is required")
+    @NotBlank(message = "Destination location is required")
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "destination_location_id")
     private Location destinationLocation;
 
-    @NotNull(message = "Transportation type is required")
+    @NotBlank(message = "Transportation type is required")
     @Enumerated(EnumType.STRING)
     private TransportationType transportationType;
 
 
-    public Transportation(Long id, @NonNull Location originLocation, @NonNull Location destinationLocation, TransportationType transportationType) {
+    public Transportation(Long id, @NotBlank Location originLocation, @NotBlank Location destinationLocation, @NotBlank TransportationType transportationType) {
         this.id = id;
         this.originLocation = originLocation;
         this.destinationLocation = destinationLocation;
@@ -47,6 +48,7 @@ public class Transportation {
 
     }
 
+    @NonNull
     public Long getId() {
         return id;
     }
@@ -60,7 +62,7 @@ public class Transportation {
         return originLocation;
     }
 
-    public void setOriginLocation(@NonNull Location originLocation) {
+    public void setOriginLocation(@NotBlank Location originLocation) {
         this.originLocation = originLocation;
     }
 
@@ -69,7 +71,7 @@ public class Transportation {
         return destinationLocation;
     }
 
-    public void setDestinationLocation(@NonNull Location destinationLocation) {
+    public void setDestinationLocation(@NotBlank Location destinationLocation) {
         this.destinationLocation = destinationLocation;
     }
 
@@ -77,7 +79,7 @@ public class Transportation {
         return transportationType;
     }
 
-    public void setTransportationType(TransportationType transportationType) {
+    public void setTransportationType(@NotBlank TransportationType transportationType) {
         this.transportationType = transportationType;
     }
 }

@@ -12,23 +12,20 @@ public class Location {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NonNull
     @NotBlank(message = "Name is required")
+    @Size(min = 2, message = "Name must be at least 2 characters")
     private String name;
 
-    @NonNull
     @NotBlank(message = "Country is required")
     private String country;
 
-    @NonNull
     @NotBlank(message = "City is required")
     private String city;
 
-    @NonNull
     @Size(max = 3, message = "Location code must be at most 3 characters")
     private String locationCode;
 
-    public Location(Long id, @NonNull String name, @NonNull String country, @NonNull String city, @NonNull String locationCode) {
+    public Location(Long id, @NotBlank String name, @NotBlank String country, @NotBlank String city, String locationCode) {
         this.id = id;
         this.name = name;
         this.country = country;

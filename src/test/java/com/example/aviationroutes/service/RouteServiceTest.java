@@ -1,6 +1,7 @@
 package com.example.aviationroutes.service;
 
 import com.example.aviationroutes.dto.RouteDto;
+import com.example.aviationroutes.exception.InvalidRouteException;
 import com.example.aviationroutes.model.Location;
 import com.example.aviationroutes.model.Transportation;
 import com.example.aviationroutes.model.Transportation.TransportationType;
@@ -98,6 +99,37 @@ public class RouteServiceTest {
         assertNotNull(route.getBeforeFlightTransfer());
         assertNotNull(route.getFlight());
         assertNotNull(route.getAfterFlightTransfer());
+    }
+
+    @Test
+    void testFindAllValidRoutes_NoFlight() {
+        Transportation bus = createTransportation(1L, 2L, TransportationType.BUS);
+        List<Transportation> allTransportations = List.of(bus);
+        when(transportationRepository.findAll()).thenReturn(allTransportations);
+
+        assertThrows(InvalidRouteException.class, () -> {
+            routeService.findAllValidRoutes(1L, 2L);
+        });
+    }
+
+    @Test
+    void testFindAllValidRoutes_NoMatch() {
+        Transportation flight = createTransportation(5L, 6L, TransportationType.FLIGHT);
+        when(transportationRepository.findAll()).thenReturn(List.of(flight));
+
+        assertThrows(InvalidRouteException.class, () -> {
+            routeService.findAllValidRoutes(1L, 2L);
+        });
+    }
+
+    @Test
+    void testFindAllValidRoutes_SameOriginDestination() {
+        Transportation flight = createTransportation(1L, 1L, TransportationType.FLIGHT);
+        when(transportationRepository.findAll()).thenReturn(List.of(flight));
+
+        assertThrows(InvalidRouteException.class, () -> {
+            routeService.findAllValidRoutes(1L, 1L);
+        });
     }
 
     private Transportation createTransportation(Long originId, Long destinationId, TransportationType type) {
