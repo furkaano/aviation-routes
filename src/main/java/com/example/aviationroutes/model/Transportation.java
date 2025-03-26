@@ -22,22 +22,22 @@ public class Transportation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Origin location is required")
+    @NotNull(message = "Origin location is required")
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "origin_location_id")
     private Location originLocation;
 
-    @NotBlank(message = "Destination location is required")
+    @NotNull(message = "Destination location is required")
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "destination_location_id")
     private Location destinationLocation;
 
-    @NotBlank(message = "Transportation type is required")
+    @NotNull(message = "Transportation type is required")
     @Enumerated(EnumType.STRING)
     private TransportationType transportationType;
 
 
-    public Transportation(Long id, @NotBlank Location originLocation, @NotBlank Location destinationLocation, @NotBlank TransportationType transportationType) {
+    public Transportation(Long id, @NotNull Location originLocation, @NotNull Location destinationLocation, @NotNull TransportationType transportationType) {
         this.id = id;
         this.originLocation = originLocation;
         this.destinationLocation = destinationLocation;
@@ -48,7 +48,6 @@ public class Transportation {
 
     }
 
-    @NonNull
     public Long getId() {
         return id;
     }
@@ -62,7 +61,7 @@ public class Transportation {
         return originLocation;
     }
 
-    public void setOriginLocation(@NotBlank Location originLocation) {
+    public void setOriginLocation(@NonNull Location originLocation) {
         this.originLocation = originLocation;
     }
 
@@ -71,7 +70,7 @@ public class Transportation {
         return destinationLocation;
     }
 
-    public void setDestinationLocation(@NotBlank Location destinationLocation) {
+    public void setDestinationLocation(@NonNull Location destinationLocation) {
         this.destinationLocation = destinationLocation;
     }
 
@@ -79,7 +78,7 @@ public class Transportation {
         return transportationType;
     }
 
-    public void setTransportationType(@NotBlank TransportationType transportationType) {
+    public void setTransportationType(@NonNull TransportationType transportationType) {
         this.transportationType = transportationType;
     }
 }

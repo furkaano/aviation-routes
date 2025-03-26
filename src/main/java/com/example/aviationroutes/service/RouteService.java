@@ -9,11 +9,22 @@ import com.example.aviationroutes.repository.LocationRepository;
 import com.example.aviationroutes.repository.TransportationRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class RouteService {
+
+    private static class PathState {
+        private final Long currentLocationId;
+        private final List<Transportation> path;
+        private final int flightsUsed;
+
+        public PathState(Long currentLocationId, List<Transportation> path, int flightsUsed) {
+            this.currentLocationId = currentLocationId;
+            this.path = path;
+            this.flightsUsed = flightsUsed;
+        }
+    }
 
     private final TransportationRepository transportationRepository;
     private final LocationRepository locationRepository;
@@ -23,34 +34,60 @@ public class RouteService {
         this.locationRepository = locationRepository;
     }
 
-    /**
-     * Combines different route patterns (direct flight, flight with pre-transfer,
-     * flight with post-transfer, flight with both pre- and post-transfer).
-     * If no valid route is found, throws InvalidRouteException.
-     */
     public List<RouteDto> findAllValidRoutes(Long originId, Long destinationId){
         if (originId.equals(destinationId)) {
             throw new InvalidRouteException("Origin and destination cannot be the same.");
         }
         List<Transportation> transportations = transportationRepository.findAll();
-
-        List<Transportation> flights = new ArrayList<>();
-        List<Transportation> nonFlights = new ArrayList<>();
-
-        for(Transportation transportation : transportations){
-            if(transportation.getTransportationType() == Transportation.TransportationType.FLIGHT){
-                flights.add(transportation);
-            } else {
-                nonFlights.add(transportation);
-            }
+        if(transportations.isEmpty()){
+            throw new InvalidRouteException("No transportation records found");
         }
+
+        Map<Long, List<Transportation>> adjacencyMap = buildAdjacencyMap(transportations);
+        //Initialize BFS
+        Queue<PathState> queue = new LinkedList<>();
+        queue.offer(new PathState(originId, new ArrayList<>(), 0));
 
         List<RouteDto> results = new ArrayList<>();
 
-        results.addAll(findDirectFlights(flights, originId, destinationId));
-        results.addAll(findBeforeFlight(flights, nonFlights, originId, destinationId));
-        results.addAll(findAfterFlight(flights, nonFlights, originId, destinationId));
-        results.addAll(findBeforeAndAfterFlight(flights, nonFlights, originId, destinationId));
+        while (!queue.isEmpty()){
+            PathState current = queue.poll();
+            Long currentLoc = current.currentLocationId;
+            List<Transportation> pathSoFar = current.path;
+            int flightsUsedSoFar = current.flightsUsed;
+
+            // Check if reached the destination
+            if(currentLoc.equals(destinationId)){
+                if(pathSoFar.size() <= 3 && flightsUsedSoFar == 1){
+                    results.add(buildRouteDtoFromPath(pathSoFar));
+                }
+                continue;
+            }
+
+            if(pathSoFar.size() >= 3){
+                continue;
+            }
+
+            List<Transportation> edges = adjacencyMap.getOrDefault(currentLoc, Collections.emptyList());
+            for(Transportation next : edges){
+                int nextFlightsUsed = flightsUsedSoFar;
+                if(next.getTransportationType() == Transportation.TransportationType.FLIGHT){
+                    nextFlightsUsed++;
+                    if(nextFlightsUsed > 1){
+                        continue;
+                    }
+                }
+
+                List<Transportation> newPath = new ArrayList<>(pathSoFar);
+                newPath.add(next);
+
+                queue.offer(new PathState(
+                        next.getDestinationLocation().getId(),
+                        newPath,
+                        nextFlightsUsed
+                ));
+            }
+        }
 
         if (results.isEmpty()) {
             throw new InvalidRouteException("Invalid route: no flight segment found or no valid route.");
@@ -60,93 +97,64 @@ public class RouteService {
     }
 
     /**
-     * Finds direct flights from originId to destinationId.
+     * Build adjacency map: originId -> list of transportations
      */
-    private List<RouteDto> findDirectFlights(List<Transportation> flights, Long originId, Long destinationId) {
-        List<RouteDto> routeList = new ArrayList<>();
-        for (Transportation flight: flights){
-            if(flight.getOriginLocation().getId().equals(originId) &&
-                    flight.getDestinationLocation().getId().equals(destinationId)){
-                String description = "direct flight";
-                routeList.add(createRouteDto(description, null, flight, null));
-            }
+    private Map<Long, List<Transportation>> buildAdjacencyMap(List<Transportation> transportations) {
+        Map<Long, List<Transportation>> adjacency = new HashMap<>();
+        for (Transportation transportation : transportations) {
+            Long originId = transportation.getOriginLocation().getId();
+            adjacency.computeIfAbsent(originId, key -> new ArrayList<>()).add(transportation);
         }
-        return routeList;
+        return adjacency;
     }
 
     /**
-     * Finds before flight from originId to destinationId.
+     * Convert BFS into routeDto
      */
-    private List<RouteDto> findBeforeFlight(List<Transportation> flights, List<Transportation> nonFlights, Long originId, Long destinationId) {
-        List<RouteDto> routeList = new ArrayList<>();
-        for(Transportation beforeFlight : nonFlights){
-            if(beforeFlight.getOriginLocation().getId().equals(originId)){
-                Location loc = beforeFlight.getDestinationLocation();
-                for(Transportation flight: flights){
-                    if(flight.getOriginLocation().getId().equals(loc.getId()) &&
-                            flight.getDestinationLocation().getId().equals(destinationId)){
-                        String description = "before flight: " + loc.getName();
-                        routeList.add(createRouteDto(description, beforeFlight, flight, null));
-                    }
-                }
-            }
-        }
-        return routeList;
-    }
-
-    /**
-     * Finds after flight from originId to destinationId.
-     */
-    private List<RouteDto> findAfterFlight(List<Transportation> flights, List<Transportation> nonFlights, Long originId, Long destinationId) {
-        List<RouteDto> routeList = new ArrayList<>();
-        for (Transportation flight : flights) {
-            if (flight.getOriginLocation().getId().equals(originId)) {
-                Location loc = flight.getDestinationLocation();
-                for (Transportation afterFlight : nonFlights) {
-                    if (afterFlight.getOriginLocation().getId().equals(loc.getId()) &&
-                            afterFlight.getDestinationLocation().getId().equals(destinationId)) {
-                        String description = "after flight: " + loc.getName();
-                        routeList.add(createRouteDto(description, null, flight, afterFlight));
-                    }
-                }
-            }
-        }
-        return routeList;
-    }
-
-    /**
-     * Finds before and after flight from originId to destinationId.
-     */
-    private List<RouteDto> findBeforeAndAfterFlight(List<Transportation> flights, List<Transportation> nonFlights, Long originId, Long destinationId) {
-        List<RouteDto> routeList = new ArrayList<>();
-
-        for (Transportation beforeFlight : nonFlights) {
-            if (beforeFlight.getOriginLocation().getId().equals(originId)) {
-                Location loc1 = beforeFlight.getDestinationLocation();
-                for (Transportation flight : flights) {
-                    if (flight.getOriginLocation().getId().equals(loc1.getId())) {
-                        Location loc2 = flight.getDestinationLocation();
-                        for (Transportation afterFlight : nonFlights) {
-                            if (afterFlight.getOriginLocation().getId().equals(loc2.getId()) &&
-                                    afterFlight.getDestinationLocation().getId().equals(destinationId)) {
-                                String description = "before & after flight: " + loc1.getName() + " & " + loc2.getName();
-                                routeList.add(createRouteDto(description, beforeFlight, flight, afterFlight));
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return routeList;
-    }
-
-    private RouteDto createRouteDto(String description, Transportation before, Transportation flight, Transportation after){
+    private RouteDto buildRouteDtoFromPath(List<Transportation> path){
         RouteDto routeDto = new RouteDto();
-        routeDto.setDescription(description);
-        routeDto.setBeforeFlightTransfer(before == null ? null : toSegmentDto(before));
-        routeDto.setFlight(flight == null ? null : toSegmentDto(flight));
-        routeDto.setAfterFlightTransfer(after == null ? null : toSegmentDto(after));
+        routeDto.setDescription(buildDescription(path));
+
+        switch (path.size()){
+            case 1: // direct flight
+                routeDto.setFlight(toSegmentDto(path.get(0)));
+                break;
+            case 2: // either before flight or after flight
+                Transportation t0 = path.get(0);
+                Transportation t1 = path.get(1);
+                if(t0.getTransportationType() == Transportation.TransportationType.FLIGHT){ // flight + after
+                    routeDto.setFlight(toSegmentDto(t0));
+                    routeDto.setAfterFlightTransfer(toSegmentDto(t1));
+                } else { // before + flight
+                    routeDto.setBeforeFlightTransfer(toSegmentDto(t0));
+                    routeDto.setFlight(toSegmentDto(t1));
+                }
+                break;
+            case 3: // before + flight + after
+                routeDto.setBeforeFlightTransfer(toSegmentDto(path.get(0)));
+                routeDto.setFlight(toSegmentDto(path.get(1)));
+                routeDto.setAfterFlightTransfer(toSegmentDto(path.get(2)));
+                break;
+        }
         return routeDto;
+    }
+
+    private String buildDescription(List<Transportation> path){
+        if(path.size() == 1){
+            return "direct flight";
+        } else if (path.size() == 2){
+            Transportation first = path.get(0);
+            if(first.getTransportationType() == Transportation.TransportationType.FLIGHT){
+                return "after flight: " + first.getDestinationLocation().getName();
+            } else {
+                return "before flight: " + first.getDestinationLocation().getName();
+            }
+        } else if (path.size() == 3) {
+            return "before & after flights: "
+                    + path.get(0).getDestinationLocation().getName() + " &"
+                    + path.get(1).getDestinationLocation().getName();
+        }
+        return "unknown route";
     }
 
     private SegmentDto toSegmentDto(Transportation transportation) {
