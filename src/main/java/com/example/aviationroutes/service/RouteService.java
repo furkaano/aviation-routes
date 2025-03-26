@@ -23,6 +23,11 @@ public class RouteService {
         this.locationRepository = locationRepository;
     }
 
+    /**
+     * Combines different route patterns (direct flight, flight with pre-transfer,
+     * flight with post-transfer, flight with both pre- and post-transfer).
+     * If no valid route is found, throws InvalidRouteException.
+     */
     public List<RouteDto> findAllValidRoutes(Long originId, Long destinationId){
         if (originId.equals(destinationId)) {
             throw new InvalidRouteException("Origin and destination cannot be the same.");
@@ -54,37 +59,34 @@ public class RouteService {
         return results;
     }
 
+    /**
+     * Finds direct flights from originId to destinationId.
+     */
     private List<RouteDto> findDirectFlights(List<Transportation> flights, Long originId, Long destinationId) {
         List<RouteDto> routeList = new ArrayList<>();
         for (Transportation flight: flights){
             if(flight.getOriginLocation().getId().equals(originId) &&
                     flight.getDestinationLocation().getId().equals(destinationId)){
-                RouteDto rd = new RouteDto();
-                rd.setDescription("direct flight");
-                rd.setBeforeFlightTransfer(null);
-                rd.setFlight(toSegmentDto(flight));
-                rd.setAfterFlightTransfer(null);
-                routeList.add(rd);
+                String description = "direct flight";
+                routeList.add(createRouteDto(description, null, flight, null));
             }
         }
         return routeList;
     }
 
+    /**
+     * Finds before flight from originId to destinationId.
+     */
     private List<RouteDto> findBeforeFlight(List<Transportation> flights, List<Transportation> nonFlights, Long originId, Long destinationId) {
         List<RouteDto> routeList = new ArrayList<>();
-        for(Transportation nf: nonFlights){
-            if(nf.getOriginLocation().getId().equals(originId)){
-                Location loc = nf.getDestinationLocation();
-                for(Transportation f: flights){
-                    if(f.getOriginLocation().getId().equals(loc.getId()) &&
-                    f.getDestinationLocation().getId().equals(destinationId)){
-                        RouteDto rd = new RouteDto();
-                        rd.setDescription("before flight: " + loc.getName());
-                        rd.setBeforeFlightTransfer(toSegmentDto(nf));
-                        rd.setFlight(toSegmentDto(f));
-                        rd.setAfterFlightTransfer(null);
-
-                        routeList.add(rd);
+        for(Transportation beforeFlight : nonFlights){
+            if(beforeFlight.getOriginLocation().getId().equals(originId)){
+                Location loc = beforeFlight.getDestinationLocation();
+                for(Transportation flight: flights){
+                    if(flight.getOriginLocation().getId().equals(loc.getId()) &&
+                            flight.getDestinationLocation().getId().equals(destinationId)){
+                        String description = "before flight: " + loc.getName();
+                        routeList.add(createRouteDto(description, beforeFlight, flight, null));
                     }
                 }
             }
@@ -92,21 +94,19 @@ public class RouteService {
         return routeList;
     }
 
+    /**
+     * Finds after flight from originId to destinationId.
+     */
     private List<RouteDto> findAfterFlight(List<Transportation> flights, List<Transportation> nonFlights, Long originId, Long destinationId) {
         List<RouteDto> routeList = new ArrayList<>();
-        for (Transportation f : flights) {
-            if (f.getOriginLocation().getId().equals(originId)) {
-                Location loc = f.getDestinationLocation();
-                for (Transportation nf : nonFlights) {
-                    if (nf.getOriginLocation().getId().equals(loc.getId()) &&
-                            nf.getDestinationLocation().getId().equals(destinationId)) {
-                        RouteDto rd = new RouteDto();
-                        rd.setDescription("after flight: " + loc.getName());
-                        rd.setBeforeFlightTransfer(null);
-                        rd.setFlight(toSegmentDto(f));
-                        rd.setAfterFlightTransfer(toSegmentDto(nf));
-
-                        routeList.add(rd);
+        for (Transportation flight : flights) {
+            if (flight.getOriginLocation().getId().equals(originId)) {
+                Location loc = flight.getDestinationLocation();
+                for (Transportation afterFlight : nonFlights) {
+                    if (afterFlight.getOriginLocation().getId().equals(loc.getId()) &&
+                            afterFlight.getDestinationLocation().getId().equals(destinationId)) {
+                        String description = "after flight: " + loc.getName();
+                        routeList.add(createRouteDto(description, null, flight, afterFlight));
                     }
                 }
             }
@@ -114,25 +114,23 @@ public class RouteService {
         return routeList;
     }
 
+    /**
+     * Finds before and after flight from originId to destinationId.
+     */
     private List<RouteDto> findBeforeAndAfterFlight(List<Transportation> flights, List<Transportation> nonFlights, Long originId, Long destinationId) {
         List<RouteDto> routeList = new ArrayList<>();
 
-        for (Transportation nf1 : nonFlights) {
-            if (nf1.getOriginLocation().getId().equals(originId)) {
-                Location loc1 = nf1.getDestinationLocation();
-                for (Transportation f : flights) {
-                    if (f.getOriginLocation().getId().equals(loc1.getId())) {
-                        Location loc2 = f.getDestinationLocation();
-                        for (Transportation nf2 : nonFlights) {
-                            if (nf2.getOriginLocation().getId().equals(loc2.getId()) &&
-                                    nf2.getDestinationLocation().getId().equals(destinationId)) {
-                                RouteDto rd = new RouteDto();
-                                rd.setDescription("before & after flight: " + loc1.getName() + " & " + loc2.getName());
-                                rd.setBeforeFlightTransfer(toSegmentDto(nf1));
-                                rd.setFlight(toSegmentDto(f));
-                                rd.setAfterFlightTransfer(toSegmentDto(nf2));
-
-                                routeList.add(rd);
+        for (Transportation beforeFlight : nonFlights) {
+            if (beforeFlight.getOriginLocation().getId().equals(originId)) {
+                Location loc1 = beforeFlight.getDestinationLocation();
+                for (Transportation flight : flights) {
+                    if (flight.getOriginLocation().getId().equals(loc1.getId())) {
+                        Location loc2 = flight.getDestinationLocation();
+                        for (Transportation afterFlight : nonFlights) {
+                            if (afterFlight.getOriginLocation().getId().equals(loc2.getId()) &&
+                                    afterFlight.getDestinationLocation().getId().equals(destinationId)) {
+                                String description = "before & after flight: " + loc1.getName() + " & " + loc2.getName();
+                                routeList.add(createRouteDto(description, beforeFlight, flight, afterFlight));
                             }
                         }
                     }
@@ -140,6 +138,15 @@ public class RouteService {
             }
         }
         return routeList;
+    }
+
+    private RouteDto createRouteDto(String description, Transportation before, Transportation flight, Transportation after){
+        RouteDto routeDto = new RouteDto();
+        routeDto.setDescription(description);
+        routeDto.setBeforeFlightTransfer(before == null ? null : toSegmentDto(before));
+        routeDto.setFlight(flight == null ? null : toSegmentDto(flight));
+        routeDto.setAfterFlightTransfer(after == null ? null : toSegmentDto(after));
+        return routeDto;
     }
 
     private SegmentDto toSegmentDto(Transportation transportation) {
