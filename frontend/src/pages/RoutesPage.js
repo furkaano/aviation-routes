@@ -7,6 +7,7 @@ function RoutesPage() {
     const [origin, setOrigin] = useState('');
     const [destination, setDestination] = useState('');
     const [routes, setRoutes] = useState([]);
+    const [errorMessage, setErrorMessage] = useState('');
 
     const [selectedRouteForDetail, setSelectedRouteForDetail] = useState(null);
     const [selectedRouteForVisual, setSelectedRouteForVisual] = useState(null);
@@ -36,22 +37,26 @@ function RoutesPage() {
             // Reset selected routes
             setSelectedRouteForDetail(null);
             setSelectedRouteForVisual(null);
+            setErrorMessage('');
         } catch (error) {
-            console.error('Error occurred while searching route:', error);
+            setErrorMessage(error.response.data.error);
+            console.error('Error occurred while searching routes:', error);
+            // clear old routes
+            setRoutes([]);
+            setSelectedRouteForDetail(null);
+            setSelectedRouteForVisual(null);
         }
     };
 
     // Show inline detail
     const handleDetailClick = (route) => {
         setSelectedRouteForDetail(route);
-        // If you only want one open at a time, you can hide the visual
         setSelectedRouteForVisual(null);
     };
 
     // Show timeline in a sidebar or pop-up
     const handleVisualClick = (route) => {
         setSelectedRouteForVisual(route);
-        // Optionally hide detail
         setSelectedRouteForDetail(null);
     };
 
@@ -87,6 +92,12 @@ function RoutesPage() {
                     Search
                 </button>
             </div>
+            {/* Display error if exists */}
+            {errorMessage && (
+                <div style={{ color: 'red', marginTop: '10px' }}>
+                    {errorMessage}
+                </div>
+            )}
 
             {/* Route List */}
             <ul>

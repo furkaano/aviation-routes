@@ -15,7 +15,7 @@ function App() {
                 <Route path="/locations" element={<LocationsPage />} />
                 <Route path="/transportations" element={<TransportationsPage />} />
                 <Route path="/routes" element={<RoutesPage />} />
-                <Route path="/" element={<h2>Hoş geldiniz!</h2>} />
+                <Route path="/" element={<h2>Aviation Routes!</h2>} />
                 <Route path="*" element={<h2>404 - Sayfa Bulunamadı</h2>} />
             </Routes>
           </div>

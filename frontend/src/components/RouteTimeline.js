@@ -28,7 +28,6 @@ function RouteTimeline({ route, onClose }) {
 
 export default RouteTimeline;
 
-// same getSegmentsFromRoute function as above
 function getSegmentsFromRoute(route) {
     const segments = [];
     if (route.beforeFlightTransfer) {
@@ -75,6 +74,7 @@ const styles = {
     circle: {
         position: 'absolute',
         left: 0,
+        top: '25px',
         width: '16px',
         height: '16px',
         borderRadius: '50%',
@@ -83,11 +83,12 @@ const styles = {
     },
     connector: {
         position: 'absolute',
-        left: '7px',
-        top: '16px',
-        width: '2px',
-        height: '40px',
-        background: '#333'
+        left: '9px',
+        top: '43px',
+        height: '95px',
+        width: 0,
+        display: 'block',
+        borderLeft: '2px dashed #333'
     },
     content: {
         backgroundColor: '#f9f9f9',
