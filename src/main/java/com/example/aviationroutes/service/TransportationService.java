@@ -1,6 +1,8 @@
 package com.example.aviationroutes.service;
 
+import com.example.aviationroutes.exception.DuplicateEntryException;
 import com.example.aviationroutes.model.Transportation;
+import com.example.aviationroutes.model.Transportation.TransportationType;
 import com.example.aviationroutes.repository.TransportationRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -19,10 +21,20 @@ public class TransportationService {
     }
 
     public Transportation createTransportation(Transportation transportation){
-        if (transportation.getOriginLocation().getId().equals(transportation.getDestinationLocation().getId())) {
+        Long originId = transportation.getOriginLocation().getId();
+        Long destinationId = transportation.getDestinationLocation().getId();
+        TransportationType type = transportation.getTransportationType();
+
+        if (originId.equals(destinationId)) {
             throw new RuntimeException("Origin and destination cannot be the same.");
         }
 
+        Optional<Transportation> existing = transportationRepository.findByOriginLocation_IdAndDestinationLocation_IdAndTransportationType(originId, destinationId, type);
+        if(existing.isPresent()){
+            throw new DuplicateEntryException("Transportation from origin " + originId +
+                    " to destination " + destinationId +
+                    " with type " + type + " already exists.");
+        }
         return transportationRepository.save(transportation);
     }
 
@@ -33,6 +45,16 @@ public class TransportationService {
 
         Optional<Transportation> existingTrans= transportationRepository.findById(id);
         if(existingTrans.isPresent()){
+            Optional<Transportation> duplicate = transportationRepository
+                    .findByOriginLocation_IdAndDestinationLocation_IdAndTransportationType(
+                            transportation.getOriginLocation().getId(),
+                            transportation.getDestinationLocation().getId(),
+                            transportation.getTransportationType());
+
+            if (duplicate.isPresent() && !duplicate.get().getId().equals(id)) {
+                throw new DuplicateEntryException("A transportation with the same origin, destination, and type already exists.");
+            }
+
             Transportation exist = existingTrans.get();
             exist.setOriginLocation(transportation.getOriginLocation());
             exist.setDestinationLocation(transportation.getDestinationLocation());

@@ -1,5 +1,6 @@
 package com.example.aviationroutes.service;
 
+import com.example.aviationroutes.exception.DuplicateEntryException;
 import com.example.aviationroutes.model.Location;
 import com.example.aviationroutes.repository.LocationRepository;
 import jakarta.transaction.Transactional;
@@ -19,12 +20,24 @@ public class LocationService {
     }
 
     public Location createLocation(Location location){
+        Optional<Location> existing = locationRepository.findByNameAndCountryAndCityAndLocationCode(
+                location.getName(), location.getCountry(), location.getCity(), location.getLocationCode()
+        );
+        if(existing.isPresent()){
+            throw new DuplicateEntryException("Location already exists.");
+        }
         return locationRepository.save(location);
     }
 
     public Location updateLocation(Long id, Location location){
         Optional<Location> existingLoc = locationRepository.findById(id);
         if(existingLoc.isPresent()){
+            Optional<Location> duplicate = locationRepository.findByNameAndCountryAndCityAndLocationCode(
+                    location.getName(), location.getCountry(), location.getCity(), location.getLocationCode());
+            if (duplicate.isPresent() && !duplicate.get().getId().equals(id)) {
+                throw new DuplicateEntryException("A location with the same details already exists.");
+            }
+
             Location exist = existingLoc.get();
             exist.setName(location.getName());
             exist.setCountry(location.getCountry());

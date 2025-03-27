@@ -9,6 +9,7 @@ function TransportationsPage() {
         transportationType: ''
     });
     const [editId, setEditId] = useState(null);
+    const [errorMessage, setErrorMessage] = useState('');
 
     useEffect(() => {
         fetchTransportations();
@@ -49,9 +50,16 @@ function TransportationsPage() {
             // Reset state or refetch after success
             setFormData({ originLocationId: '', destinationLocationId: '', transportationType: '' });
             setEditId(null);
-            fetchTransportations(); // or however you refresh your list
+            fetchTransportations();
+            setErrorMessage('');
         } catch (error) {
-            console.error('Error occurred while adding/updating transportation:', error);
+            if(editId){
+                setErrorMessage(error.response.data.error || 'An error occurred while aupdating the location.');
+                console.error('Error occurred while updating transportation:', error);
+            } else {
+                setErrorMessage(error.response.data.error || 'An error occurred while adding the location.');
+                console.error('Error occurred while adding transportation:', error);
+            }
         }
     };
 
@@ -69,7 +77,9 @@ function TransportationsPage() {
         try {
             await axios.delete(`http://localhost:8080/transportations/${id}`);
             fetchTransportations();
+            setErrorMessage('');
         } catch (error) {
+            setErrorMessage(error.response.data.error || 'An error occurred while deleting the location.');
             console.error('Error occurred while deleting transportation:', error);
         }
     };
@@ -120,6 +130,12 @@ function TransportationsPage() {
                 <button type="submit" style={{ padding: '10px 15px' }}>
                     {editId ? 'Update Transportation' : 'Add Transportation'}
                 </button>
+                {/* Display error if exists */}
+                {errorMessage && (
+                    <div style={{ color: 'red', marginBottom: '10px' }}>
+                        {errorMessage}
+                    </div>
+                )}
             </form>
 
             {/* Listeleme */}

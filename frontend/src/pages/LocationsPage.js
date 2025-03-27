@@ -10,6 +10,7 @@ function LocationsPage() {
         locationCode: ''
     });
     const [editId, setEditId] = useState(null);
+    const [errorMessage, setErrorMessage] = useState('');
 
     // 1) Get All Locations
     useEffect(() => {
@@ -41,7 +42,9 @@ function LocationsPage() {
                 setEditId(null);
                 setFormData({ name: '', country: '', city: '', locationCode: '' });
                 fetchLocations();
+                setErrorMessage('');
             } catch (error) {
+                setErrorMessage(error.response.data.error || 'An error occurred while updating the location.');
                 console.error('Error occurred while updating location:', error);
             }
         } else {
@@ -50,7 +53,9 @@ function LocationsPage() {
                 await axios.post('http://localhost:8080/locations', formData);
                 setFormData({ name: '', country: '', city: '', locationCode: '' });
                 fetchLocations();
+                setErrorMessage('');
             } catch (error) {
+                setErrorMessage(error.response.data.error || 'An error occurred while adding the location.');
                 console.error('Error occurred while adding location:', error);
             }
         }
@@ -72,7 +77,9 @@ function LocationsPage() {
         try {
             await axios.delete(`http://localhost:8080/locations/${id}`);
             fetchLocations();
+            setErrorMessage('');
         } catch (error) {
+            setErrorMessage(error.response.data.error || 'An error occurred while deleting the location.');
             console.error('Error occurred while deleting location:', error);
         }
     };
@@ -127,6 +134,12 @@ function LocationsPage() {
                 <button type="submit" style={{ padding: '10px 15px' }}>
                     {editId ? 'Update Location' : 'Add Location'}
                 </button>
+                {/* Display error if exists */}
+                {errorMessage && (
+                    <div style={{ color: 'red', marginBottom: '10px' }}>
+                        {errorMessage}
+                    </div>
+                )}
             </form>
 
             {/* Listing */}
