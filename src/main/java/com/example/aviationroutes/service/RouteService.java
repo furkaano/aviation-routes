@@ -58,7 +58,7 @@ public class RouteService {
 
             // Check if reached the destination
             if(currentLoc.equals(destinationId)){
-                if(pathSoFar.size() <= 3 && flightsUsedSoFar == 1){
+                if(pathSoFar.size() <= 3 && flightsUsedSoFar == 1 && isValidPath(pathSoFar)){
                     results.add(buildRouteDtoFromPath(pathSoFar));
                 }
                 continue;
@@ -94,6 +94,31 @@ public class RouteService {
         }
 
         return results;
+    }
+
+    private boolean isValidPath(List<Transportation> path) {
+        if (path.isEmpty()) return false;
+
+        int flightIndex = -1;
+        for (int i = 0; i < path.size(); i++) {
+            if (path.get(i).getTransportationType() == Transportation.TransportationType.FLIGHT) {
+                flightIndex = i;
+                break;
+            }
+        }
+        if (flightIndex == -1) return false; // No flight found; invalid.
+
+        if (path.size() == 1) {
+            // Only one segment: it must be a FLIGHT.
+            return flightIndex == 0;
+        } else if (path.size() == 2) {
+            // Two segments: valid if either [non-FLIGHT, FLIGHT] or [FLIGHT, non-FLIGHT].
+            return flightIndex == 0 || flightIndex == 1;
+        } else if (path.size() == 3) {
+            // Three segments: valid only if FLIGHT is in the middle.
+            return flightIndex == 1;
+        }
+        return false;
     }
 
     /**

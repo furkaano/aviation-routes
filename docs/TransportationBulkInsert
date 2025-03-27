@@ -1,0 +1,188 @@
+[
+  // İstanbul inside transfers
+  {
+    "originLocation": { "id": 1 },
+    "destinationLocation": { "id": 2 },
+    "transportationType": "BUS"
+  },
+  {
+    "originLocation": { "id": 1 },
+    "destinationLocation": { "id": 2 },
+    "transportationType": "UBER"
+  },
+  {
+    "originLocation": { "id": 1 },
+    "destinationLocation": { "id": 2 },
+    "transportationType": "SUBWAY"
+  },
+  {
+    "originLocation": { "id": 1 },
+    "destinationLocation": { "id": 3 },
+    "transportationType": "UBER"
+  },
+  {
+    "originLocation": { "id": 4 },
+    "destinationLocation": { "id": 2 },
+    "transportationType": "UBER"
+  },
+  {
+    "originLocation": { "id": 4 },
+    "destinationLocation": { "id": 3 },
+    "transportationType": "UBER"
+  },
+  {
+    "originLocation": { "id": 2 },
+    "destinationLocation": { "id": 4 },
+    "transportationType": "UBER"
+  },
+  {
+    "originLocation": { "id": 2 },
+    "destinationLocation": { "id": 1 },
+    "transportationType": "UBER"
+  },
+  {
+    "originLocation": { "id": 3 },
+    "destinationLocation": { "id": 4 },
+    "transportationType": "UBER"
+  },
+  {
+    "originLocation": { "id": 3 },
+    "destinationLocation": { "id": 1 },
+    "transportationType": "UBER"
+  },
+  // İstanbul & London flights
+  {
+    "originLocation": { "id": 2 },
+    "destinationLocation": { "id": 5 },
+    "transportationType": "FLIGHT"
+  },
+  {
+    "originLocation": { "id": 3 },
+    "destinationLocation": { "id": 6 },
+    "transportationType": "FLIGHT"
+  },
+  {
+    "originLocation": { "id": 5 },
+    "destinationLocation": { "id": 2 },
+    "transportationType": "FLIGHT"
+  },
+  {
+    "originLocation": { "id": 6 },
+    "destinationLocation": { "id": 3 },
+    "transportationType": "FLIGHT"
+  },
+  // İstanbul & New York flight
+  {
+    "originLocation": { "id": 2 },
+    "destinationLocation": { "id": 9 },
+    "transportationType": "FLIGHT"
+  },
+  {
+    "originLocation": { "id": 9 },
+    "destinationLocation": { "id": 2 },
+    "transportationType": "FLIGHT"
+  },
+  // London inside transfers
+  {
+    "originLocation": { "id": 5 },
+    "destinationLocation": { "id": 7 },
+    "transportationType": "BUS"
+  },
+  {
+    "originLocation": { "id": 5 },
+    "destinationLocation": { "id": 7 },
+    "transportationType": "UBER"
+  },
+  {
+    "originLocation": { "id": 5 },
+    "destinationLocation": { "id": 7 },
+    "transportationType": "SUBWAY"
+  },
+  {
+    "originLocation": { "id": 6 },
+    "destinationLocation": { "id": 7 },
+    "transportationType": "BUS"
+  },
+  {
+    "originLocation": { "id": 6 },
+    "destinationLocation": { "id": 7 },
+    "transportationType": "UBER"
+  },
+  {
+    "originLocation": { "id": 6 },
+    "destinationLocation": { "id": 7 },
+    "transportationType": "SUBWAY"
+  },
+  {
+    "originLocation": { "id": 7 },
+    "destinationLocation": { "id": 5 },
+    "transportationType": "UBER"
+  },
+  {
+    "originLocation": { "id": 7 },
+    "destinationLocation": { "id": 6 },
+    "transportationType": "SUBWAY"
+  },
+  // Londra & New York flights
+  {
+    "originLocation": { "id": 5 },
+    "destinationLocation": { "id": 9 },
+    "transportationType": "FLIGHT"
+  },
+  {
+    "originLocation": { "id": 6 },
+    "destinationLocation": { "id": 9 },
+    "transportationType": "FLIGHT"
+  },
+  {
+    "originLocation": { "id": 9 },
+    "destinationLocation": { "id": 5 },
+    "transportationType": "FLIGHT"
+  },
+  {
+    "originLocation": { "id": 9 },
+    "destinationLocation": { "id": 6 },
+    "transportationType": "FLIGHT"
+  },
+  // New York inside transfers
+  {
+    "originLocation": { "id": 9 },
+    "destinationLocation": { "id": 10 },
+    "transportationType": "BUS"
+  },
+  {
+    "originLocation": { "id": 9 },
+    "destinationLocation": { "id": 10 },
+    "transportationType": "UBER"
+  },
+  {
+    "originLocation": { "id": 9 },
+    "destinationLocation": { "id": 10 },
+    "transportationType": "SUBWAY"
+  },
+  {
+    "originLocation": { "id": 9 },
+    "destinationLocation": { "id": 8 },
+    "transportationType": "BUS"
+  },
+  {
+    "originLocation": { "id": 9 },
+    "destinationLocation": { "id": 8 },
+    "transportationType": "UBER"
+  },
+  {
+    "originLocation": { "id": 9 },
+    "destinationLocation": { "id": 8 },
+    "transportationType": "SUBWAY"
+  },
+  {
+    "originLocation": { "id": 8 },
+    "destinationLocation": { "id": 9 },
+    "transportationType": "UBER"
+  },
+  {
+    "originLocation": { "id": 10 },
+    "destinationLocation": { "id": 9 },
+    "transportationType": "UBER"
+  }
+]

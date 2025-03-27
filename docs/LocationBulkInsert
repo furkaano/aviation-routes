@@ -1,0 +1,62 @@
+[
+    {
+        "name": "Taksim Square",
+        "country": "Turkey",
+        "city": "Istanbul",
+        "locationCode": ""
+    },
+    {
+        "name": "Istanbul Airport",
+        "country": "Turkey",
+        "city": "Istanbul",
+        "locationCode": "IST"
+    },
+    {
+        "name": "Sabiha Gokcen Airport",
+        "country": "Turkey",
+        "city": "Istanbul",
+        "locationCode": "SAW"
+    },
+    {
+        "name": "Esenler Bus Station",
+        "country": "Turkey",
+        "city": "Istanbul",
+        "locationCode": ""
+    },
+    {
+        "name": "London Heathrow Airport",
+        "country": "UK",
+        "city": "London",
+        "locationCode": "LHR"
+    },
+    {
+        "name": "London Stansted Airport",
+        "country": "UK",
+        "city": "London",
+        "locationCode": "STN"
+    },
+    {
+        "name": "Wembley Stadium",
+        "country": "UK",
+        "city": "London",
+        "locationCode": ""
+    },
+    {
+        "name": "Times Square",
+        "country": "USA",
+        "city": "New York",
+        "locationCode": ""
+    },
+    {
+        "name": "John F. Kennedy International Airport",
+        "country": "USA",
+        "city": "New York",
+        "locationCode": "JFK"
+    },
+    {
+        "name": "Grand Central Station",
+        "country": "USA",
+        "city": "New York",
+        "locationCode": ""
+    }
+]
